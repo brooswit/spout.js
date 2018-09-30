@@ -62633,8 +62633,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _getGitHubContent = require('./lib/getGitHubContent');
 
 var _getGitHubContent2 = _interopRequireDefault(_getGitHubContent);
@@ -62672,12 +62670,13 @@ var mutations = {
     state.branch = initData.branch;
   },
   storeSpout: function storeSpout(state, spoutData) {
-    console.log(typeof spoutData === 'undefined' ? 'undefined' : _typeof(spoutData));
     state.name = spoutData.settings.name || 'spout.js';
-    state.rootDoc = spoutData.settings.rootDoc || 'root';
-    state.docs = spoutData.doc;
+    state.rootDocKey = spoutData.settings.rootDocKey || 'root';
+    state.docs = spoutData.docs;
   },
-  storeDoc: function storeDoc(state, newDoc) {}
+  storeDoc: function storeDoc(state, newDoc) {
+    console.log({ newDoc: newDoc });
+  }
 };
 
 var getters = {
@@ -62694,11 +62693,11 @@ var getters = {
       account: state.account,
       repository: state.repository,
       branch: state.branch,
-      path: [getters.getCurrentDoc]
+      path: [getters.getCurrentDoc.path]
     };
   },
   getCurrentDoc: function getCurrentDoc(state) {
-    return state.currentDocKey;
+    return state.docs[state.currentDocKey || state.rootDocKey];
   }
 };
 
@@ -62837,7 +62836,7 @@ var StoreController = function (_EventEmitter) {
         branch: '',
         currentDocKey: '',
         name: 'Spout.js',
-        rootDoc: 'root',
+        rootDocKey: 'root',
         docs: {}
       },
       mutations: mutations,

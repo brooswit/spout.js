@@ -14,13 +14,12 @@ const mutations = {
     state.branch = initData.branch
   },
   storeSpout (state, spoutData) {
-    console.log(typeof spoutData)
     state.name = spoutData.settings.name || 'spout.js'
-    state.rootDoc = spoutData.settings.rootDoc || 'root'
-    state.docs = spoutData.doc
+    state.rootDocKey = spoutData.settings.rootDocKey || 'root'
+    state.docs = spoutData.docs
   },
   storeDoc (state, newDoc) {
-
+    console.log({newDoc})
   }
 }
 
@@ -38,11 +37,11 @@ const getters = {
       account: state.account,
       repository: state.repository,
       branch: state.branch,
-      path: [getters.getCurrentDoc]
+      path: [getters.getCurrentDoc.path]
     }
   },
   getCurrentDoc (state) {
-    return state.currentDocKey
+    return state.docs[state.currentDocKey || state.rootDocKey]
   }
 }
 
@@ -89,7 +88,7 @@ export default class StoreController extends EventEmitter {
         branch: '',
         currentDocKey: '',
         name: 'Spout.js',
-        rootDoc: 'root',
+        rootDocKey: 'root',
         docs: {}
       },
       mutations,
