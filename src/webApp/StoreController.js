@@ -13,12 +13,11 @@ const mutations = {
     state.repository = initData.repository
     state.branch = initData.branch
   },
-  storeSpout (state, newSpout) {
-    state.account = undefined
-    state.repository = undefined
-    state.branch = undefined
-    state.docs = newSpout
-    state.currentDoc = undefined
+  storeSpout (state, spoutData) {
+    console.log(typeof spoutData)
+    state.name = spoutData.settings.name || 'spout.js'
+    state.rootDoc = spoutData.settings.rootDoc || 'root'
+    state.docs = spoutData.doc
   },
   storeDoc (state, newDoc) {
 
@@ -68,7 +67,7 @@ const actions = {
     await dispatch('fetchSpout')
   },
   async fetchSpout ({getters, commit, dispatch}) {
-    commit('storeSpout', await getGitHubContent(getters.getSpoutRequest))
+    commit('storeSpout', JSON.parse(await getGitHubContent(getters.getSpoutRequest)))
     await dispatch('fetchDoc')
   },
   async fetchDoc ({getters, commit}) {
@@ -88,7 +87,10 @@ export default class StoreController extends EventEmitter {
         account: '',
         repository: '',
         branch: '',
-        currentDocKey: ''
+        currentDocKey: '',
+        name: 'Spout.js',
+        rootDoc: 'root',
+        docs: {}
       },
       mutations,
       getters,

@@ -62633,6 +62633,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _getGitHubContent = require('./lib/getGitHubContent');
 
 var _getGitHubContent2 = _interopRequireDefault(_getGitHubContent);
@@ -62669,12 +62671,11 @@ var mutations = {
     state.repository = initData.repository;
     state.branch = initData.branch;
   },
-  storeSpout: function storeSpout(state, newSpout) {
-    state.account = undefined;
-    state.repository = undefined;
-    state.branch = undefined;
-    state.docs = newSpout;
-    state.currentDoc = undefined;
+  storeSpout: function storeSpout(state, spoutData) {
+    console.log(typeof spoutData === 'undefined' ? 'undefined' : _typeof(spoutData));
+    state.name = spoutData.settings.name || 'spout.js';
+    state.rootDoc = spoutData.settings.rootDoc || 'root';
+    state.docs = spoutData.doc;
   },
   storeDoc: function storeDoc(state, newDoc) {}
 };
@@ -62760,16 +62761,18 @@ var actions = {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.t0 = commit;
-              _context2.next = 3;
+              _context2.t1 = JSON;
+              _context2.next = 4;
               return (0, _getGitHubContent2.default)(getters.getSpoutRequest);
 
-            case 3:
-              _context2.t1 = _context2.sent;
-              (0, _context2.t0)('storeSpout', _context2.t1);
-              _context2.next = 7;
+            case 4:
+              _context2.t2 = _context2.sent;
+              _context2.t3 = _context2.t1.parse.call(_context2.t1, _context2.t2);
+              (0, _context2.t0)('storeSpout', _context2.t3);
+              _context2.next = 9;
               return dispatch('fetchDoc');
 
-            case 7:
+            case 9:
             case 'end':
               return _context2.stop();
           }
@@ -62832,7 +62835,10 @@ var StoreController = function (_EventEmitter) {
         account: '',
         repository: '',
         branch: '',
-        currentDocKey: ''
+        currentDocKey: '',
+        name: 'Spout.js',
+        rootDoc: 'root',
+        docs: {}
       },
       mutations: mutations,
       getters: getters,
