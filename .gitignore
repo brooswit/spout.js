@@ -1,27 +1,12 @@
-#OS files
+# Node build artifacts
+node_modules
+npm-debug.log
+
+# Local development
+*.env
+*.dev
 .DS_Store
 
-# Editor files
-/.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-**.swp
-*.sw*
-
-# Logs
-logs
-*.log
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-node_modules
-# /src/WebAppServer/build/
-
-# Parcel cache
-.cache
+# Docker
+Dockerfile
+docker-compose.yml
