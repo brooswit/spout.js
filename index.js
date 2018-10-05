@@ -70,10 +70,10 @@ async function getGitHubContent({
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/', (req, res) => {
-      res.render('pages/directory', {options, doc: docs[req.params.targetDocKey]})
+      res.render('pages/doc', {options, doc: docs[settings.rootDocKey]})
     })
     .get('/:targetDocKey', (req, res) => {
-      res.render('pages/directory', {options, doc: docs[req.params.targetDocKey]});
+      res.render('pages/doc', {options, doc: docs[req.params.targetDocKey]});
     })
     .listen(options.port, () => console.log(`Listening on ${ options.port }`));
 })();
