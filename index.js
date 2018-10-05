@@ -48,7 +48,7 @@ async function getGitHubContent({
     path: ['spout.json']
   }))
 
-  let config = {
+  let settings = {
     siteName: spoutData.settings.siteName || 'spout.js',
     rootDocKey: spoutData.settings.rootDocKey || 'root'
   };
@@ -57,9 +57,9 @@ async function getGitHubContent({
 
   for (key in docs) {
     docs[key].content = await getGitHubContent({
-      account: config.githubAccount,
-      repository: config.githubRepo,
-      branch: config.githubBranch,
+      account: options.githubAccount,
+      repository: options.githubRepo,
+      branch: options.githubBranch,
       path: [docs[key].path]
     })
   }
@@ -73,7 +73,7 @@ async function getGitHubContent({
       res.render('pages/directory', state)
     })
     .get('/:targetDocKey', (req, res) => {
-      res.render('pages/directory', {config, doc: docs[req.params.targetDocKey]});
+      res.render('pages/directory', {options, doc: docs[req.params.targetDocKey]});
     })
-    .listen(config.port, () => console.log(`Listening on ${ config.port }`));
+    .listen(options.port, () => console.log(`Listening on ${ options.port }`));
 })();
