@@ -4,7 +4,7 @@
         <% include ../partials/header.ejs %>
     </head>
     <body>
-        <%= doc.title %>
+        <%- doc.markdown %>
         <%= JSON.stringify(doc) %>
     </body>
 </html>
