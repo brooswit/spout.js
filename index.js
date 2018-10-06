@@ -1,6 +1,7 @@
 const https = require('https');
 const express = require('express')
 const path = require('path')
+const marked = require('marked')
 
 let cache = {}
 
@@ -62,6 +63,7 @@ async function getGitHubContent({
       branch: options.githubBranch,
       path: [docs[key].path]
     })
+    docs[key].markdown = marked(docs[key].content)
   }
   console.log({docs})
 
