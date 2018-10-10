@@ -72,7 +72,7 @@ async function getGitHubContent({
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
     .get('/', (req, res) => {
-      res.render('pages/doc', {options, doc: docs[settings.rootDocKey]})
+      res.render('pages/dir', {options, docs})
     })
     .get('/:targetDocKey', (req, res) => {
       res.render('pages/doc', {options, doc: docs[req.params.targetDocKey]});
