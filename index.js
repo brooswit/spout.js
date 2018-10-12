@@ -5,6 +5,12 @@ const marked = require('marked')
 
 let cache = {}
 
+setInterval(()=>{
+  for (key in cache) {
+    delete cache[key]
+  }
+}, 1000*60*15/*15 minutes*/)
+
 async function getGitHubContent({
   account,
   repository,
@@ -50,33 +56,51 @@ async function getGitHubContent({
   }))
 
   let settings = {
-    siteName: spoutData.settings.siteName || 'spout.js',
-    rootDocKey: spoutData.settings.rootDocKey || 'root'
-  };
-
-  let docs = spoutData.docs;
-
-  for (key in docs) {
-    docs[key].content = await getGitHubContent({
-      account: options.githubAccount,
-      repository: options.githubRepo,
-      branch: options.githubBranch,
-      path: [docs[key].path]
-    })
-    docs[key].markdown = marked(docs[key].content)
+    siteName: spoutData.siteName || 'spout.js',
+    rootDirectory: spoutData.rootDirectory,
+    rootDocPath: spoutData.rootDocPath,
+    rootDocData: {}
   }
-  console.log({docs})
+  
+  async function handleResponse(req, res) {
+    let requestedDoc = req.params.requestedDoc
+    let docContent, docData
+    
+    if (!requestedDoc) {
+      docContent = await getGitHubContent({
+        account: options.githubAccount,
+        repository: options.githubRepo,
+        branch: options.githubBranch,
+        path: [settings.rootDocPath]
+      })
+      
+      docData = settings.rootDocData
+    } else {
+      docContent = await getGitHubContent({
+        account: options.githubAccount,
+        repository: options.githubRepo,
+        branch: options.githubBranch,
+        path: [settings.rootDirectory, `${requestedDoc}.md`]
+      })
 
+      docData = JSON.parse(await getGitHubContent({
+        account: options.githubAccount,
+        repository: options.githubRepo,
+        branch: options.githubBranch,
+        path: [settings.rootDirectory, `${requestedDoc}.json`]
+      }))
+    }
+    
+    docData.content = docContent
+    docData.markdown = markd(docContent)
+    
+    res.render('pages/doc', docData)
+  }
+  
   express()
     .use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
-    .get('/:targetDocKey', (req, res) => {
-      let { markdown } = docs[req.params.targetDocKey];
-      res.render('pages/doc', { options, markdown });
-    })
-    .get('/', (req, res) => {
-      res.render('pages/dir', {options, docs})
-    })
-    .listen(options.port, () => console.log(`Listening on ${ options.port }`));
-})();
+    .get('/:requestedDoc', handleResponse)
+    .listen(options.port, () => console.log(`Listening on ${ options.port }`))
+})()
