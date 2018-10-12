@@ -71,11 +71,12 @@ async function getGitHubContent({
     .use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
+    .get('/:targetDocKey', (req, res) => {
+      let { markdown } = docs[req.params.targetDocKey];
+      res.render('pages/doc', { options, markdown });
+    })
     .get('/', (req, res) => {
       res.render('pages/dir', {options, docs})
-    })
-    .get('/:targetDocKey', (req, res) => {
-      res.render('pages/doc', {options, doc: docs[req.params.targetDocKey]});
     })
     .listen(options.port, () => console.log(`Listening on ${ options.port }`));
 })();
