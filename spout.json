@@ -1,13 +1,8 @@
 {
-    "settings": {
-        "siteName": "Spout.js Documentation",
-        "rootDocKey": "getting-started"
-    },
-    "docs": {
-        "getting-started": {
-            "title": "Getting Started",
-            "author": "Jay Winstead",
-            "path": "./README.md"
-        }
-    }
+    "siteName": "Spout.js Documentation",
+    "rootDocPath": "README.md",
+    "rootDirectory": "docs"
+    "title": "Getting Started",
+    "author": "Jay Winstead",
+    "path": "./README.md"
 }
