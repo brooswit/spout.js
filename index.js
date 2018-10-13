@@ -22,7 +22,7 @@ async function getGitHubContent({
 
   console.info('fetching: ' + requestPath, finalPath)
 
-  return await (cache[requestPath] = cache[requestPath] || new Promise((resolve, rejects) => {
+  return await (cache[requestPath] = cache[requestPath] || new Promise((resolve, reject) => {
     https.get(requestPath, (res) => {
       let data = ''
       res.on('data', (chunk) => {
@@ -30,11 +30,12 @@ async function getGitHubContent({
       })
 
       res.on('end', () => {
+        if (res.statusCode !== 200) return reject(res.statusCode, data)
         console.log({statusCode: res.statusCode, data})
         resolve(data)
       })
     }).on('error', (err) => {
-      rejects(err)
+      reject(500, err)
     })
   }))
 }
