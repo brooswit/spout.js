@@ -30,7 +30,7 @@ async function getGitHubContent({
       })
 
       res.on('end', () => {
-        console.log(data)
+        console.log({res, data})
         resolve(data)
       })
     }).on('error', (err) => {
