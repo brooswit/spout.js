@@ -20,7 +20,7 @@ async function getGitHubContent({
   let finalPath = typeof path === 'string' ? path : path.join('/')
   let requestPath = `https://raw.githubusercontent.com/${account}/${repository}/${branch}/${finalPath}`
 
-  console.info('fetching: ' + requestPath)
+  console.info('fetching: ' + requestPath, finalPath)
 
   return await (cache[requestPath] = cache[requestPath] || new Promise((resolve, rejects) => {
     https.get(requestPath, (res) => {
