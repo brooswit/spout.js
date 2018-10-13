@@ -1,7 +1,7 @@
 {
     "siteName": "Spout.js Documentation",
     "rootDocPath": "README.md",
-    "rootDirectory": "docs"
+    "rootDirectory": "docs",
     "title": "Getting Started",
     "author": "Jay Winstead",
     "path": "./README.md"
